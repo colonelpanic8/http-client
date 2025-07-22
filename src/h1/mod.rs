@@ -5,11 +5,12 @@ use std::fmt::Debug;
 use std::net::SocketAddr;
 use std::sync::Arc;
 
-use async_h1::client;
+use async_h1_2::client;
 use async_std::net::TcpStream;
 use dashmap::DashMap;
 use deadpool::managed::Pool;
-use http_types::StatusCode;
+use http_types_2::StatusCode;
+
 
 cfg_if::cfg_if! {
     if #[cfg(feature = "rustls")] {
@@ -124,7 +125,7 @@ impl H1Client {
 #[async_trait]
 impl HttpClient for H1Client {
     async fn send(&self, mut req: Request) -> Result<Response, Error> {
-        req.insert_header("Connection", "keep-alive");
+        let _ = req.insert_header("Connection", "keep-alive");
 
         // Insert host
         #[cfg(any(feature = "native-tls", feature = "rustls"))]
@@ -268,7 +269,7 @@ impl HttpClient for H1Client {
     /// Override the existing configuration with new configuration.
     ///
     /// Config options may not impact existing connections.
-    fn set_config(&mut self, config: Config) -> http_types::Result<()> {
+    fn set_config(&mut self, config: Config) -> http_types_2::Result<()> {
         #[cfg(features = "h1_client")]
         assert!(config.max_connections_per_host > 0, "max_connections_per_host with h1_client must be greater than zero or it will deadlock!");
 
@@ -304,12 +305,12 @@ mod tests {
     use super::*;
     use async_std::prelude::*;
     use async_std::task;
-    use http_types::url::Url;
-    use http_types::Result;
+    use http_types_2::url::Url;
+    use http_types_2::Result;
     use std::time::Duration;
 
     fn build_test_request(url: Url) -> Request {
-        let mut req = Request::new(http_types::Method::Post, url);
+        let mut req = Request::new(http_types_2::Method::Post, url);
         req.set_body("hello");
         req.append_header("test", "value");
         req
@@ -320,7 +321,7 @@ mod tests {
         let port = portpicker::pick_unused_port().unwrap();
         let mut app = tide::new();
         app.at("/").all(|mut r: tide::Request<()>| async move {
-            let mut response = tide::Response::new(http_types::StatusCode::Ok);
+            let mut response = tide::Response::new(http_types_2::StatusCode::Ok);
             response.set_body(r.body_bytes().await.unwrap());
             Ok(response)
         });

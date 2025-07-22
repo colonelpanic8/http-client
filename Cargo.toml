@@ -1,6 +1,6 @@
 [package]
 name = "http-client-2"
-version = "6.6.2"
+version = "6.6.3"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/http-rs/http-client"
 documentation = "https://docs.rs/http-client"
@@ -26,7 +26,7 @@ h1_client = ["async-h1-2", "async-std", "dashmap", "deadpool", "futures"]
 h1_client_rustls = ["h1_client", "rustls"]
 native_client = ["curl_client", "wasm_client"]
 curl_client = ["isahc", "async-std"]
-wasm_client = ["js-sys", "web-sys", "wasm-bindgen", "wasm-bindgen-futures", "futures", "async-std"]
+wasm_client = ["js-sys", "web-sys", "wasm-bindgen", "wasm-bindgen-futures", "futures"]
 hyper_client = ["hyper", "hyper-tls", "http_types/hyperium_http", "futures-util", "tokio"]
 
 native-tls = ["async-native-tls"]
@@ -67,7 +67,7 @@ isahc = { version = "1.7.2", optional = true, default-features = false, features
 js-sys = { version = "0.3.74", optional = true }
 wasm-bindgen = { version = "0.2.99", optional = true }
 wasm-bindgen-futures = { version = "0.4.49", optional = true }
-futures = { version = "0.3.31", optional = true }
+futures = { version = "0.3.31", optional = true, default-features = false }
 send_wrapper = { version = "0.6.0", features = ["futures"] }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies.web-sys]

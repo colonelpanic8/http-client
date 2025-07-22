@@ -106,8 +106,8 @@ cfg_if::cfg_if! {
     if #[cfg(feature = "rustls")] {
         #[allow(unused_variables)]
         pub(crate) async fn add_tls(host: &str, stream: TcpStream, config: &Config) -> Result<TlsStream<TcpStream>, std::io::Error> {
-            let connector = if let Some(tls_config) = config.tls_config.as_ref().cloned() {
-                tls_config.into()
+            let connector = if let Some(tls_config) = config.tls_config.as_ref() {
+                async_tls::TlsConnector::from((**tls_config).clone())
             } else {
                 async_tls::TlsConnector::default()
             };

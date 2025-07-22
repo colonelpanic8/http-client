@@ -1,6 +1,6 @@
 [package]
 name = "http-client-2"
-version = "6.6.1"
+version = "6.6.2"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/http-rs/http-client"
 documentation = "https://docs.rs/http-client"
@@ -27,7 +27,7 @@ h1_client_rustls = ["h1_client", "rustls"]
 native_client = ["curl_client", "wasm_client"]
 curl_client = ["isahc", "async-std"]
 wasm_client = ["js-sys", "web-sys", "wasm-bindgen", "wasm-bindgen-futures", "futures", "async-std"]
-hyper_client = ["hyper", "hyper-tls", "http_types_2/hyperium_http", "futures-util", "tokio"]
+hyper_client = ["hyper", "hyper-tls", "http_types/hyperium_http", "futures-util", "tokio"]
 
 native-tls = ["async-native-tls"]
 rustls = ["async-tls", "rustls_crate"]
@@ -36,7 +36,7 @@ unstable-config = [] # deprecated
 
 [dependencies]
 async-trait = "0.1"
-http_types_2 = { version = "3.1.0", package = "http-types-2" }
+http_types = { version = "3.1.0", package = "http-types-2" }
 log = "0.4"
 cfg-if = "1.0"
 

@@ -50,19 +50,16 @@ impl HttpClient for IsahcClient {
         }
 
         let body = req.take_body();
-        let body = match body.len() {
-            Some(len) => isahc::Body::from_reader_sized(body, len as u64),
-            None => isahc::Body::from_reader(body),
-        };
+        let body_bytes = body.into_bytes().await.map_err(Error::from)?;
 
-        let request = builder.body(body).unwrap();
+        let request = builder.body(isahc::AsyncBody::from(body_bytes)).unwrap();
         let res = self.client.send_async(request).await.map_err(Error::from)?;
         let maybe_metrics = res.metrics().cloned();
         let (parts, body) = res.into_parts();
         let body = Body::from_reader(BufReader::new(body), None);
         let mut response = http_types::Response::new(parts.status.as_u16());
         for (name, value) in &parts.headers {
-            response.append_header(name.as_str(), value.to_str().unwrap());
+            let _ = response.append_header(name.as_str(), value.to_str().unwrap());
         }
 
         if let Some(metrics) = maybe_metrics {

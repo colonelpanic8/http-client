@@ -39,13 +39,13 @@ pub mod h1;
 pub mod hyper;
 
 /// An HTTP Request type with a streaming body.
-pub type Request = http_types_2::Request;
+pub type Request = http_types::Request;
 
 /// An HTTP Response type with a streaming body.
-pub type Response = http_types_2::Response;
+pub type Response = http_types::Response;
 
 pub use async_trait::async_trait;
-pub use http_types_2;
+pub use http_types;
 
 /// An abstract HTTP client.
 ///
@@ -67,7 +67,7 @@ pub trait HttpClient: std::fmt::Debug + Unpin + Send + Sync + 'static {
     /// Override the existing configuration with new configuration.
     ///
     /// Config options may not impact existing connections.
-    fn set_config(&mut self, _config: Config) -> http_types_2::Result<()> {
+    fn set_config(&mut self, _config: Config) -> http_types::Result<()> {
         unimplemented!(
             "{} has not implemented `HttpClient::set_config()`",
             type_name_of(self)
@@ -88,18 +88,18 @@ fn type_name_of<T: ?Sized>(_val: &T) -> &'static str {
 }
 
 /// The raw body of an http request or response.
-pub type Body = http_types_2::Body;
+pub type Body = http_types::Body;
 
 /// Error type.
-pub type Error = http_types_2::Error;
+pub type Error = http_types::Error;
 
 #[async_trait]
 impl HttpClient for Box<dyn HttpClient> {
-    async fn send(&self, req: Request) -> http_types_2::Result<Response> {
+    async fn send(&self, req: Request) -> http_types::Result<Response> {
         self.as_ref().send(req).await
     }
 
-    fn set_config(&mut self, config: Config) -> http_types_2::Result<()> {
+    fn set_config(&mut self, config: Config) -> http_types::Result<()> {
         self.as_mut().set_config(config)
     }
 
